@@ -10,7 +10,7 @@ For general information about developing packages, see the Dart guide for
 and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/to/develop-packages).
 
-## Paystack Flutterwave url Payment example
+## Paystack and Flutterwave url Payment example
 
 ```dart
 import 'package:example/screens/failed.dart';
