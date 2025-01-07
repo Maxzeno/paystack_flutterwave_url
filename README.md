@@ -1,16 +1,18 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Paystack and Flutterwave URL Payment Integration
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+A simple Flutter package to facilitate payments via Paystack and Flutterwave checkout URLs. This package enables you to seamlessly redirect users to the respective payment gateway and handle success or failure callbacks.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
+## Features
 
-## Paystack and Flutterwave url Payment example
+- Supports **Paystack** and **Flutterwave** gateways.
+- Handles payment success and failure callbacks.
+- Customizable loading widget during the redirection process.
+
+---
+
+## Example Usage
+
+Below is a complete example to help you integrate the package into your Flutter app:
 
 ```dart
 import 'package:example/screens/failed.dart';
@@ -54,22 +56,18 @@ class _PaymentPageState extends State<PaymentPage> {
       MaterialPageRoute(
         builder: (context) {
           return RedirectionToPaystackScreen(
-            gatewayType: GatewayType
-                .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
-            checkoutUrl:
-                "Paystack or Flutterwave checkout url", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
+            gatewayType: GatewayType.paystack, // or GatewayType.flutterwave
+            checkoutUrl: "Your Checkout URL", // Example: https://checkout.paystack.com/xlt21ud3wz0985r
             onSuccess: () {
-              // Is called when payment succeeds
+              // Called on payment success
               Navigator.pushReplacementNamed(context, '/success');
             },
             onFailure: () {
-              // Is called when payment fails
+              // Called on payment failure
               Navigator.pushReplacementNamed(context, '/failed');
             },
             loadingWidget: const Center(
-              child: CircularProgressIndicator(
-                color: Colors.red,
-              ),
+              child: CircularProgressIndicator(color: Colors.red),
             ),
           );
         },
@@ -90,5 +88,3 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 }
-
-```
