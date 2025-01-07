@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:paystack_flutterwave_url/paystack_flutterwave_url.dart';
+import 'package:paystack_flutterwave_url/utils/enum.dart';
 
 void main() {
   runApp(const MyApp());

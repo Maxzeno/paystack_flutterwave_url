@@ -4,13 +4,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:paystack_flutterwave_url/utils/enum.dart';
+import 'package:paystack_flutterwave_url/utils/template.dart';
 import 'package:paystack_flutterwave_url/utils/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-enum GatewayType {
-  paystack,
-  flutterwave,
-}
 
 class RedirectionToPaystackScreen extends StatefulWidget {
   final GatewayType gatewayType;
@@ -18,6 +15,7 @@ class RedirectionToPaystackScreen extends StatefulWidget {
   final VoidCallback? onSuccess;
   final VoidCallback? onFailure;
   final Widget? loadingWidget;
+
   const RedirectionToPaystackScreen({
     super.key,
     required this.gatewayType,
@@ -36,37 +34,76 @@ class _RedirectionToPaystackScreenState
     extends State<RedirectionToPaystackScreen> {
   late WebViewController webViewController;
   late Timer timer;
-  late String baseGateWayUrl;
   bool payCalled = false;
 
   @override
   void initState() {
-    if (widget.gatewayType == GatewayType.paystack) {
-      baseGateWayUrl = 'paystack.com/';
-    } else {
-      baseGateWayUrl = 'flutterwave.com/';
-    }
-    // give 2 seconds delay before setting payCalled to true
-    timer = Timer(
-      const Duration(seconds: 2),
-      () {
-        setState(() {
-          payCalled = true;
-        });
-      },
-    );
-
-    WidgetsBinding.instance.addPostFrameCallback(
-      (timeStamp) {
-        if (kIsWeb) {
-          launchWeb(widget.checkoutUrl);
-        } else {
-          payFunc();
-        }
-      },
-    );
-
     super.initState();
+
+    if (!isValidUrl(widget.checkoutUrl)) {
+      onFailureFunc();
+      return;
+    }
+
+    timer = Timer(const Duration(seconds: 2), () {
+      setState(() {
+        payCalled = true;
+      });
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (kIsWeb) {
+        launchWeb(widget.checkoutUrl, onFailureFunc: onFailureFunc);
+      } else {
+        payFunc();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  bool isValidUrl(String url) {
+    if ((url.contains('paystack.com') &&
+            widget.gatewayType == GatewayType.paystack) ||
+        (url.contains('flutterwave.com') &&
+            widget.gatewayType == GatewayType.flutterwave)) {
+      return Uri.tryParse(url)?.hasAbsolutePath ?? false;
+    }
+    return false;
+  }
+
+  void payFunc() {
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(onPageStarted: handleUrlNavigation),
+      )
+      ..loadHtmlString(getHtmlTemplate(widget.checkoutUrl));
+  }
+
+  void handleUrlNavigation(String url) {
+    String baseGateWayUrl = {
+      GatewayType.paystack: 'paystack.com',
+      GatewayType.flutterwave: 'flutterwave.com',
+    }[widget.gatewayType]!;
+    if (url.contains(baseGateWayUrl)) {
+      // Stay on the payment gateway
+    } else if (url.startsWith('about:blank') && payCalled) {
+      onFailureFunc();
+    } else if (!url.contains(baseGateWayUrl)) {
+      if (widget.gatewayType == GatewayType.flutterwave &&
+          url.contains('status=cancelled')) {
+        onFailureFunc();
+        return;
+      }
+      onSuccessFunc();
+    } else {
+      onFailureFunc();
+    }
   }
 
   void onSuccessFunc() {
@@ -90,71 +127,15 @@ class _RedirectionToPaystackScreenState
   }
 
   @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
-  }
-
-  payFunc() {
-    webViewController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setUserAgent('Flutter;Webview')
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageStarted: (url) async {
-            if (url.contains(baseGateWayUrl)) {
-              // do nothing
-            } else if (url.startsWith('about:blank')) {
-              if (payCalled) {
-                onFailureFunc();
-              }
-            } else if (!url.contains(baseGateWayUrl)) {
-              if (widget.gatewayType == GatewayType.flutterwave &&
-                  url.contains('status=cancelled')) {
-                onFailureFunc();
-                return;
-              }
-              onSuccessFunc();
-              return;
-            } else {
-              onFailureFunc();
-            }
-          },
-        ),
-      )
-      ..loadHtmlString('''
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Payment</title>
-  <script type="text/javascript">
-    function redirectToUrl() {
-      setTimeout(function() {
-        window.location.href = '${widget.checkoutUrl}';
-      }, 10);
-    }
-  </script>
-</head>
-<body onload="redirectToUrl()">
-  <h1></h1>
-</body>
-</html>
-''');
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: payCalled
-            ? WebViewWidget(
-                controller: webViewController,
-              )
-            : widget.loadingWidget ??
-                const Center(
-                  child: CircularProgressIndicator(),
-                ),
+            ? WebViewWidget(controller: webViewController)
+            : Center(
+                child:
+                    widget.loadingWidget ?? const CircularProgressIndicator()),
       ),
     );
   }
