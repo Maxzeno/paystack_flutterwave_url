@@ -1,6 +1,6 @@
 name: paystack_flutterwave_url
-description: "A Flutter package for Paystack Flutterwave checkout url payment."
-version: 0.0.1
+description: "A Flutter package for Paystack and Flutterwave checkout url payment."
+version: 0.0.2
 homepage: "https://github.com/Maxzeno/paystack_flutterwave_url"
 repository: https://github.com/Maxzeno/paystack_flutterwave_url
 issue_tracker: https://github.com/Maxzeno/paystack_flutterwave_url/issues

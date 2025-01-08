@@ -1,9 +1,9 @@
-import 'package:paystack_flutterwave_url/utils/enum.dart';
+import 'package:paystack_flutterwave_url/utils/constants.dart';
 
 bool isValidUrl(String url, GatewayType gatewayType) {
-  if ((url.contains('paystack.com') && gatewayType == GatewayType.paystack) ||
-      (url.contains('flutterwave.com') &&
-          gatewayType == GatewayType.flutterwave)) {
+  String? baseGateWayUrl = checkoutType[gatewayType];
+
+  if (baseGateWayUrl != null && url.contains(baseGateWayUrl)) {
     return Uri.tryParse(url)?.hasAbsolutePath ?? false;
   }
   return false;

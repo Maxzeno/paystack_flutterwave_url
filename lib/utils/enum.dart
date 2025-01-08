@@ -1,1 +1,0 @@
-enum GatewayType { paystack, flutterwave }

@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:paystack_flutterwave_url/utils/enum.dart';
+import 'package:paystack_flutterwave_url/utils/constants.dart';
 import 'package:paystack_flutterwave_url/utils/template.dart';
 import 'package:paystack_flutterwave_url/utils/url_launcher.dart';
 import 'package:paystack_flutterwave_url/utils/validate.dart';
@@ -73,10 +73,7 @@ class _RedirectionToPaymentScreenState
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) async {
-            String baseGateWayUrl = {
-              GatewayType.paystack: 'paystack.com',
-              GatewayType.flutterwave: 'flutterwave.com',
-            }[widget.gatewayType]!;
+            String baseGateWayUrl = checkoutType[widget.gatewayType]!;
             if (url.contains(baseGateWayUrl)) {
               // Stay on the payment gateway
             } else if (url.startsWith('about:blank')) {

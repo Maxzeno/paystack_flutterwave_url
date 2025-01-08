@@ -2,7 +2,7 @@ import 'package:example/screens/failed.dart';
 import 'package:example/screens/success.dart';
 import 'package:flutter/material.dart';
 import 'package:paystack_flutterwave_url/paystack_flutterwave_url.dart';
-import 'package:paystack_flutterwave_url/utils/enum.dart';
+import 'package:paystack_flutterwave_url/utils/constants.dart';
 
 void main() {
   runApp(const MyApp());

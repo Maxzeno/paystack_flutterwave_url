@@ -19,7 +19,7 @@ import 'package:example/screens/failed.dart';
 import 'package:example/screens/success.dart';
 import 'package:flutter/material.dart';
 import 'package:paystack_flutterwave_url/paystack_flutterwave_url.dart';
-import 'package:paystack_flutterwave_url/utils/enum.dart';
+import 'package:paystack_flutterwave_url/utils/constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,18 +56,22 @@ class _PaymentPageState extends State<PaymentPage> {
       MaterialPageRoute(
         builder: (context) {
           return RedirectionToPaymentScreen(
-            gatewayType: GatewayType.paystack, // or GatewayType.flutterwave
-            checkoutUrl: "Your Checkout URL", // Example: https://checkout.paystack.com/xlt21ud3wz0985r
+            gatewayType: GatewayType
+                .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
+            checkoutUrl:
+                "https://checkout.paystack.com/hu6b3obfydtnu49", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
             onSuccess: () {
-              // Called on payment success
+              // Is called when payment succeeds
               Navigator.pushReplacementNamed(context, '/success');
             },
             onFailure: () {
-              // Called on payment failure
+              // Is called when payment fails
               Navigator.pushReplacementNamed(context, '/failed');
             },
             loadingWidget: const Center(
-              child: CircularProgressIndicator(color: Colors.red),
+              child: CircularProgressIndicator(
+                color: Colors.red,
+              ),
             ),
           );
         },
@@ -88,4 +92,5 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 }
+
 ```
