@@ -33,7 +33,7 @@ class RedirectionToPaymentScreen extends StatefulWidget {
 
 class _RedirectionToPaymentScreenState
     extends State<RedirectionToPaymentScreen> {
-  late WebViewController webViewController;
+  WebViewController? webViewController;
   late Timer timer;
   bool payCalled = false;
 
@@ -125,8 +125,8 @@ class _RedirectionToPaymentScreenState
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: payCalled
-            ? WebViewWidget(controller: webViewController)
+        child: payCalled && webViewController != null
+            ? WebViewWidget(controller: webViewController!)
             : Center(
                 child:
                     widget.loadingWidget ?? const CircularProgressIndicator()),
