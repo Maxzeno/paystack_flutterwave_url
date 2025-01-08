@@ -55,7 +55,7 @@ class _PaymentPageState extends State<PaymentPage> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return RedirectionToPaystackScreen(
+          return RedirectionToPaymentScreen(
             gatewayType: GatewayType.paystack, // or GatewayType.flutterwave
             checkoutUrl: "Your Checkout URL", // Example: https://checkout.paystack.com/xlt21ud3wz0985r
             onSuccess: () {
@@ -88,3 +88,4 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 }
+```

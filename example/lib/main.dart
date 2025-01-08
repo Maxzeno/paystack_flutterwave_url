@@ -38,7 +38,7 @@ class _PaymentPageState extends State<PaymentPage> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return RedirectionToPaystackScreen(
+          return RedirectionToPaymentScreen(
             gatewayType: GatewayType
                 .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
             checkoutUrl:

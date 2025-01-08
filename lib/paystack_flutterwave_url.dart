@@ -10,14 +10,14 @@ import 'package:paystack_flutterwave_url/utils/url_launcher.dart';
 import 'package:paystack_flutterwave_url/utils/validate.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class RedirectionToPaystackScreen extends StatefulWidget {
+class RedirectionToPaymentScreen extends StatefulWidget {
   final GatewayType gatewayType;
   final String checkoutUrl;
   final VoidCallback? onSuccess;
   final VoidCallback? onFailure;
   final Widget? loadingWidget;
 
-  const RedirectionToPaystackScreen({
+  const RedirectionToPaymentScreen({
     super.key,
     required this.gatewayType,
     required this.checkoutUrl,
@@ -27,12 +27,12 @@ class RedirectionToPaystackScreen extends StatefulWidget {
   });
 
   @override
-  State<RedirectionToPaystackScreen> createState() =>
-      _RedirectionToPaystackScreenState();
+  State<RedirectionToPaymentScreen> createState() =>
+      _RedirectionToPaymentScreenState();
 }
 
-class _RedirectionToPaystackScreenState
-    extends State<RedirectionToPaystackScreen> {
+class _RedirectionToPaymentScreenState
+    extends State<RedirectionToPaymentScreen> {
   late WebViewController webViewController;
   late Timer timer;
   bool payCalled = false;
