@@ -8,6 +8,7 @@ Future<void> launchWeb(String link,
     url,
     mode: LaunchMode.inAppBrowserView,
     webViewConfiguration: const WebViewConfiguration(),
+    webOnlyWindowName: '_self',
   )) {
     onFailureFunc();
   }

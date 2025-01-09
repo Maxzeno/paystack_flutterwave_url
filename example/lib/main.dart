@@ -40,9 +40,9 @@ class _PaymentPageState extends State<PaymentPage> {
         builder: (context) {
           return RedirectionToPaymentScreen(
             gatewayType: GatewayType
-                .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
+                .flutterwave, // toggle between GatewayType.paystack and GatewayType.flutterwave
             checkoutUrl:
-                "https://checkout.paystack.com/hu6b3obfydtnu49", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
+                "https://checkout-v2.dev-flutterwave.com/v3/hosted/pay/539cba61ced7e05498a1", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
             onSuccess: () {
               // Is called when payment succeeds
               Navigator.pushReplacementNamed(context, '/success');
