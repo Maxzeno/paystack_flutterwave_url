@@ -1,6 +1,6 @@
 ## 0.0.2
 
-* Refactored code.
+* Added more support for iOS
 
 ## 0.0.1
 

@@ -9,7 +9,7 @@ String getHtmlTemplate(String redirectUrl) {
     function redirectToUrl() {
       setTimeout(function() {
         window.location.href = '$redirectUrl';
-      }, 10);
+      }, 1);
     }
   </script>
 </head>

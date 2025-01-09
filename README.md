@@ -59,20 +59,15 @@ class _PaymentPageState extends State<PaymentPage> {
             gatewayType: GatewayType
                 .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
             checkoutUrl:
-                "https://checkout.paystack.com/hu6b3obfydtnu49", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
+                "Checkout url for paystack or flutterwave", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
             onSuccess: () {
-              // Is called when payment succeeds
+              // Called when payment succeeds
               Navigator.pushReplacementNamed(context, '/success');
             },
             onFailure: () {
-              // Is called when payment fails
+              // Called when payment fails or is cancelled
               Navigator.pushReplacementNamed(context, '/failed');
             },
-            loadingWidget: const Center(
-              child: CircularProgressIndicator(
-                color: Colors.red,
-              ),
-            ),
           );
         },
       ),
