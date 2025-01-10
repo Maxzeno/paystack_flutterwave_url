@@ -1,3 +1,7 @@
+## 0.0.3
+
+* Improved the docs and logs
+
 ## 0.0.2
 
 * Added more support for iOS

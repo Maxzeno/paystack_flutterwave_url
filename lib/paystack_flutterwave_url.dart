@@ -1,7 +1,6 @@
 library paystack_flutterwave_url;
 
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +80,7 @@ class _RedirectionToPaymentScreenState
 
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.sizeOf(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -105,28 +105,20 @@ class _RedirectionToPaymentScreenState
             },
             onLoadStart: (controller, uri) async {
               String url = uri.toString();
-              String baseGateWayUrl = checkoutType[widget.gatewayType]!;
-              log('urlurlstart $url $hasReachedPayment');
 
               if (url.startsWith('data:text/html;') && hasReachedPayment) {
                 onFailureFunc();
-                return;
-              }
-              if (url.contains(baseGateWayUrl)) {
-                setState(() {
-                  payTime = true;
-                });
                 return;
               }
             },
             onLoadStop: (controller, uri) async {
               String url = uri.toString();
               String baseGateWayUrl = checkoutType[widget.gatewayType]!;
-              log('urlurlend $url $baseGateWayUrl');
 
               if (url.contains(baseGateWayUrl)) {
                 setState(() {
                   hasReachedPayment = true;
+                  payTime = true;
                 });
                 return;
               }
@@ -135,7 +127,6 @@ class _RedirectionToPaymentScreenState
               var uri = navigationAction.request.url!;
               String url = uri.toString();
               String baseGateWayUrl = checkoutType[widget.gatewayType]!;
-              log("urlurlshould $url");
               if (url.contains(baseGateWayUrl)) {
                 // Stay on the payment gateway
                 return NavigationActionPolicy.ALLOW;
@@ -160,7 +151,6 @@ class _RedirectionToPaymentScreenState
                 onSuccessFunc();
                 return NavigationActionPolicy.CANCEL;
               } else {
-                log('on else');
                 onFailureFunc();
                 return NavigationActionPolicy.CANCEL;
               }
@@ -169,10 +159,13 @@ class _RedirectionToPaymentScreenState
           ),
           if (!payTime)
             Positioned(
-                child: widget.loadingWidget ??
-                    const Center(
-                      child: CircularProgressIndicator(),
-                    ))
+              height: media.height,
+              width: media.width,
+              child: widget.loadingWidget ??
+                  const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+            )
         ],
       )),
     );
