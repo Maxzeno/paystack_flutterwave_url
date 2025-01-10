@@ -4,11 +4,11 @@ A simple Flutter package to facilitate payments via Paystack and Flutterwave che
 
 <p align="center">
 
-  <a href="https://pub.dev/packages/paystack_flutterwave_url"><img src="asset/paystack1.png" alt="Paystack" height="400" width="200"/></a>
-  <a href="https://pub.dev/packages/paystack_flutterwave_url"><img src="asset/paystack2.png" alt="Paystack" height="400" width="200"/></a>
+  <a href="https://pub.dev/packages/paystack_flutterwave_url"><img src="https://raw.githubusercontent.com/Maxzeno/paystack_flutterwave_url/main/asset/paystack1.png" alt="Paystack" height="400" width="200"/></a>
+  <a href="https://pub.dev/packages/paystack_flutterwave_url"><img src="https://raw.githubusercontent.com/Maxzeno/paystack_flutterwave_url/main/asset/paystack2.png" alt="Paystack" height="400" width="200"/></a>
   <br/>
-  <a href="https://pub.dev/packages/paystack_flutterwave_url"><img src="asset/flutterwave1.png" alt="Flutterwave" height="400" width="200"/></a>
-  <a href="https://pub.dev/packages/paystack_flutterwave_url"><img src="asset/flutterwave2.png" alt="Flutterwave" height="400" width="200"/></a>
+  <a href="https://pub.dev/packages/paystack_flutterwave_url"><img src="https://raw.githubusercontent.com/Maxzeno/paystack_flutterwave_url/main/asset/flutterwave1.png" alt="Flutterwave" height="400" width="200"/></a>
+  <a href="https://pub.dev/packages/paystack_flutterwave_url"><img src="https://raw.githubusercontent.com/Maxzeno/paystack_flutterwave_url/main/asset/flutterwave2.png" alt="Flutterwave" height="400" width="200"/></a>
 </p>
 
 ## Features

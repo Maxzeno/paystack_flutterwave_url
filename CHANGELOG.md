@@ -1,3 +1,7 @@
+## 0.0.3+2
+
+* Improved the docs
+
 ## 0.0.3
 
 * Improved the docs and logs
