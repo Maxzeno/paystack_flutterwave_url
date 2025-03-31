@@ -1,3 +1,7 @@
+## 0.0.5
+
+* Added checkout with keys
+
 ## 0.0.3+2
 
 * Improved the docs

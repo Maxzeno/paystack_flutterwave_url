@@ -33,19 +33,19 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
-  void navToPay() {
+  void payWithKey() {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
           return CheckoutScreen(
             callbackUrl: "https://google.com",
-            secretKey: "sk_test_d71994bd5f5740055d86931cc55e961d02bea411",
+            secretKey: "FLWSECK_TEST-d9cae45c047f9b5a40c5b5c884a2d64c-X",
             amountInKobo: 10000,
             fullName: "Emma nwa",
             email: "emmanuelnwaegunwa@gmail.com",
             gatewayType: GatewayType
-                .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
+                .flutterwave, // toggle between GatewayType.paystack and GatewayType.flutterwave
             onSuccess: () {
               // Is called when payment succeeds
               Navigator.pushReplacementNamed(context, '/success');
@@ -64,34 +64,35 @@ class _PaymentPageState extends State<PaymentPage> {
       ),
     );
   }
-  // void navToPay() {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) {
-  //         return RedirectionToPaymentScreen(
-  //           gatewayType: GatewayType
-  //               .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
-  //           checkoutUrl:
-  //               "https://checkout.paystack.com/6q3kl2mv3u26mw2", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
-  //           onSuccess: () {
-  //             // Is called when payment succeeds
-  //             Navigator.pushReplacementNamed(context, '/success');
-  //           },
-  //           onFailure: () {
-  //             // Is called when payment fails
-  //             Navigator.pushReplacementNamed(context, '/failed');
-  //           },
-  //           loadingWidget: const Center(
-  //             child: CircularProgressIndicator(
-  //               color: Colors.purple,
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
+
+  void payWithCheckoutURL() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return RedirectionToPaymentScreen(
+            gatewayType: GatewayType
+                .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
+            checkoutUrl:
+                "https://checkout.paystack.com/6q3kl2mv3u26mw2", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
+            onSuccess: () {
+              // Is called when payment succeeds
+              Navigator.pushReplacementNamed(context, '/success');
+            },
+            onFailure: () {
+              // Is called when payment fails
+              Navigator.pushReplacementNamed(context, '/failed');
+            },
+            loadingWidget: const Center(
+              child: CircularProgressIndicator(
+                color: Colors.purple,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +100,7 @@ class _PaymentPageState extends State<PaymentPage> {
       appBar: AppBar(title: const Text("Payment")),
       body: Center(
         child: ElevatedButton(
-          onPressed: navToPay,
+          onPressed: payWithKey,
           child: const Text("Proceed to Payment"),
         ),
       ),

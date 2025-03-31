@@ -97,10 +97,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     return checkoutUrl == null
-        ? widget.loadingWidget ??
-            const Center(
-              child: CircularProgressIndicator(),
-            )
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            body: widget.loadingWidget ??
+                const Center(
+                  child: CircularProgressIndicator(),
+                ),
+          )
         : RedirectionToPaymentScreen(
             gatewayType: widget.gatewayType,
             checkoutUrl: checkoutUrl!,
