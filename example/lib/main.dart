@@ -38,11 +38,14 @@ class _PaymentPageState extends State<PaymentPage> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return RedirectionToPaymentScreen(
+          return CheckoutScreen(
+            callbackUrl: "https://google.com",
+            secretKey: "sk_test_d71994bd5f5740055d86931cc55e961d02bea411",
+            amountInKobo: 10000,
+            fullName: "Emma nwa",
+            email: "emmanuelnwaegunwa@gmail.com",
             gatewayType: GatewayType
                 .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
-            checkoutUrl:
-                "https://checkout.paystack.com/6q3kl2mv3u26mw2", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
             onSuccess: () {
               // Is called when payment succeeds
               Navigator.pushReplacementNamed(context, '/success');
@@ -61,6 +64,34 @@ class _PaymentPageState extends State<PaymentPage> {
       ),
     );
   }
+  // void navToPay() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) {
+  //         return RedirectionToPaymentScreen(
+  //           gatewayType: GatewayType
+  //               .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
+  //           checkoutUrl:
+  //               "https://checkout.paystack.com/6q3kl2mv3u26mw2", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
+  //           onSuccess: () {
+  //             // Is called when payment succeeds
+  //             Navigator.pushReplacementNamed(context, '/success');
+  //           },
+  //           onFailure: () {
+  //             // Is called when payment fails
+  //             Navigator.pushReplacementNamed(context, '/failed');
+  //           },
+  //           loadingWidget: const Center(
+  //             child: CircularProgressIndicator(
+  //               color: Colors.purple,
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

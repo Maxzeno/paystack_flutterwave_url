@@ -5,9 +5,8 @@ import 'package:paystack_flutterwave_url/utils/constants.dart';
 import 'package:paystack_flutterwave_url/utils/flutterwave.dart';
 import 'package:paystack_flutterwave_url/utils/paystack.dart';
 
-class Checkout extends StatefulWidget {
+class CheckoutScreen extends StatefulWidget {
   final GatewayType gatewayType;
-  final String publicKey;
   final String secretKey;
   final int amountInKobo;
   final VoidCallback? onSuccess;
@@ -21,10 +20,9 @@ class Checkout extends StatefulWidget {
   final String title;
   final String description;
 
-  const Checkout({
+  const CheckoutScreen({
     super.key,
     required this.gatewayType,
-    required this.publicKey,
     required this.secretKey,
     required this.amountInKobo,
     this.onSuccess,
@@ -40,10 +38,10 @@ class Checkout extends StatefulWidget {
   });
 
   @override
-  State<Checkout> createState() => _CheckoutState();
+  State<CheckoutScreen> createState() => _CheckoutScreenState();
 }
 
-class _CheckoutState extends State<Checkout> {
+class _CheckoutScreenState extends State<CheckoutScreen> {
   InAppWebViewController? webViewController;
   bool payTime = false;
   bool hasReachedPayment = false;
