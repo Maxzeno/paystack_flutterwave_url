@@ -40,12 +40,12 @@ class _PaymentPageState extends State<PaymentPage> {
         builder: (context) {
           return CheckoutScreen(
             callbackUrl: "https://google.com",
-            secretKey: "FLWSECK_TEST-d9cae45c047f9b5a40c5b5c884a2d64c-X",
-            amountInKobo: 10000,
-            fullName: "Emma nwa",
+            secretKey: "sk_test_d71994bd5f5740055d86931cc55e961d02bea411",
+            amountInMinorUnits: 10000, // 100 naira will be 1000 (kobo)
+            fullName: "Emma Nwa",
             email: "emmanuelnwaegunwa@gmail.com",
             gatewayType: GatewayType
-                .flutterwave, // toggle between GatewayType.paystack and GatewayType.flutterwave
+                .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
             onSuccess: () {
               // Is called when payment succeeds
               Navigator.pushReplacementNamed(context, '/success');

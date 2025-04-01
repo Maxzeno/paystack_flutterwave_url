@@ -1,3 +1,7 @@
+## 1.0.2
+
+* Updated checkout with key
+
 ## 1.0.0
 
 * Added checkout with keys
