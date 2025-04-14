@@ -15,6 +15,7 @@ class FlutterwaveService {
 
   /// Initialize payment with Flutterwave
   Future<Map<String, dynamic>> initializePayment({
+    String? reference,
     required double amount,
     required String email,
     required String currency,
@@ -25,13 +26,13 @@ class FlutterwaveService {
     required String description,
   }) async {
     const String baseUrl = "https://api.flutterwave.com/v3";
-    final String reference = generateReference();
+    final String txRef = reference ?? generateReference();
 
     Map<String, dynamic> data = {
       "payment_options": "card,banktransfer",
       "amount": amount,
       "email": email,
-      "tx_ref": reference,
+      "tx_ref": txRef,
       "currency": currency,
       "redirect_url": redirectUrl,
       "customer": {"email": email, "name": customerName},

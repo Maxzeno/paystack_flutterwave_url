@@ -7,6 +7,7 @@ import 'package:paystack_flutterwave_url/utils/paystack.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final GatewayType gatewayType;
+  final String? reference;
   final String secretKey;
   final int amountInMinorUnits;
   final VoidCallback? onSuccess;
@@ -23,6 +24,7 @@ class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({
     super.key,
     required this.gatewayType,
+    this.reference,
     required this.secretKey,
     required this.amountInMinorUnits,
     this.onSuccess,
@@ -56,6 +58,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         if (widget.gatewayType == GatewayType.paystack) {
           final resData = await PaystackService(secretKey: widget.secretKey)
               .initializePayment(
+                  reference: widget.reference,
                   email: widget.email,
                   fullName: widget.fullName,
                   amount: widget.amountInMinorUnits,
@@ -66,6 +69,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         } else {
           final resData = await FlutterwaveService(secretKey: widget.secretKey)
               .initializePayment(
+                  reference: widget.reference,
                   amount: widget.amountInMinorUnits / 100,
                   email: widget.email,
                   currency: widget.currency,
