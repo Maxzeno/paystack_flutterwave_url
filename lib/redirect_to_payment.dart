@@ -1,16 +1,17 @@
-import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:paystack_flutterwave_url/utils/constants.dart';
 import 'package:paystack_flutterwave_url/utils/template.dart';
 import 'package:paystack_flutterwave_url/utils/url_launcher.dart';
 import 'package:paystack_flutterwave_url/utils/validate.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class RedirectionToPaymentScreen extends StatefulWidget {
   final GatewayType gatewayType;
   final String checkoutUrl;
+  final String callbackUrl;
   final VoidCallback? onSuccess;
   final VoidCallback? onFailure;
   final Widget? loadingWidget;
@@ -18,6 +19,7 @@ class RedirectionToPaymentScreen extends StatefulWidget {
   const RedirectionToPaymentScreen({
     super.key,
     required this.gatewayType,
+    required this.callbackUrl,
     required this.checkoutUrl,
     this.onSuccess,
     this.onFailure,
@@ -31,29 +33,90 @@ class RedirectionToPaymentScreen extends StatefulWidget {
 
 class _RedirectionToPaymentScreenState
     extends State<RedirectionToPaymentScreen> {
-  InAppWebViewController? webViewController;
   bool payTime = false;
   bool hasReachedPayment = false;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     if (kIsWeb) {
+  //       launchWeb(widget.checkoutUrl, onFailureFunc: onFailureFunc);
+  //     } else {
+  //       if (!isValidUrl(widget.checkoutUrl, widget.gatewayType)) {
+  //         onFailureFunc();
+  //         return;
+  //       }
+  //     }
+  //   });
+  // }
+
+  WebViewController? webViewController;
+  bool payCalled = false;
   @override
   void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (kIsWeb) {
-        launchWeb(widget.checkoutUrl, onFailureFunc: onFailureFunc);
-      } else {
-        if (!isValidUrl(widget.checkoutUrl, widget.gatewayType)) {
-          onFailureFunc();
-          return;
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        if (kIsWeb) {
+          launchWeb(widget.checkoutUrl, onFailureFunc: onFailureFunc);
+        } else {
+          if (!isValidUrl(widget.checkoutUrl, widget.gatewayType)) {
+            onFailureFunc();
+            return;
+          }
         }
-      }
-    });
+
+        payFunc();
+
+        Timer(
+          const Duration(seconds: 2),
+          () {
+            setState(() {
+              payCalled = true;
+            });
+          },
+        );
+      },
+    );
+
+    super.initState();
   }
 
   @override
   void dispose() {
+    webViewController?.clearCache();
+    webViewController = null;
     super.dispose();
+  }
+
+  void payFunc() {
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setUserAgent('Flutter;Webview')
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (url) async {
+            if (url.startsWith('https://checkout.paystack.com') ||
+                url.startsWith('https://checkout.paystack.com')) {
+            } else if (url.startsWith('about:blank')) {
+              // if 2 sends passed and your back we take you out
+              if (payCalled) {
+                Navigator.pop(context);
+              }
+            } else if (url.startsWith(widget.callbackUrl) &&
+                url.contains("trxref=")) {
+              onSuccessFunc();
+              return;
+            } else if (url.startsWith("https://standard.paystack.co") &&
+                !url.startsWith("'https://standard.paystack.co/close'")) {
+            } else {
+              onFailureFunc();
+            }
+          },
+        ),
+      )
+      ..loadHtmlString(getHtmlTemplate(widget.checkoutUrl));
   }
 
   void onSuccessFunc() {
@@ -78,94 +141,27 @@ class _RedirectionToPaymentScreenState
 
   @override
   Widget build(BuildContext context) {
-    final media = MediaQuery.sizeOf(context);
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-          child: Stack(
-        children: [
-          InAppWebView(
-            initialUrlRequest: URLRequest(
-              url: WebUri.uri(
-                Uri.dataFromString(
-                  getHtmlTemplate(widget.checkoutUrl),
-                  mimeType: 'text/html',
-                  encoding: Encoding.getByName('utf-8'),
-                ),
+      appBar: payCalled
+          ? AppBar(
+              backgroundColor: payCalled ? Colors.white : null,
+              leading: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.canPop(context),
               ),
-            ),
-            initialSettings: InAppWebViewSettings(
-              useShouldOverrideUrlLoading: true,
-              javaScriptEnabled: true,
-            ),
-            onWebViewCreated: (controller) {
-              webViewController = controller;
-            },
-            onLoadStart: (controller, uri) async {
-              String url = uri.toString();
-
-              if (url.startsWith('data:text/html;') && hasReachedPayment) {
-                onFailureFunc();
-                return;
-              }
-            },
-            onLoadStop: (controller, uri) async {
-              String url = uri.toString();
-              String baseGateWayUrl = checkoutType[widget.gatewayType]!;
-
-              if (url.contains(baseGateWayUrl)) {
-                setState(() {
-                  hasReachedPayment = true;
-                  payTime = true;
-                });
-                return;
-              }
-            },
-            shouldOverrideUrlLoading: (controller, navigationAction) async {
-              var uri = navigationAction.request.url!;
-              String url = uri.toString();
-              String baseGateWayUrl = checkoutType[widget.gatewayType]!;
-              if (url.contains(baseGateWayUrl)) {
-                // Stay on the payment gateway
-                return NavigationActionPolicy.ALLOW;
-              } else if (url.contains('about:blank')) {
-                webViewController!.loadUrl(
-                  urlRequest: URLRequest(
-                    url: WebUri.uri(
-                      Uri.dataFromString(
-                        getHtmlTemplate(widget.checkoutUrl),
-                        mimeType: 'text/html',
-                        encoding: Encoding.getByName('utf-8'),
-                      ),
-                    ),
-                  ),
-                );
-              } else if (!url.contains(baseGateWayUrl)) {
-                if (widget.gatewayType == GatewayType.flutterwave &&
-                    url.contains('status=cancelled')) {
-                  onFailureFunc();
-                  return NavigationActionPolicy.CANCEL;
-                }
-                onSuccessFunc();
-                return NavigationActionPolicy.CANCEL;
-              } else {
-                onFailureFunc();
-                return NavigationActionPolicy.CANCEL;
-              }
-              return null;
-            },
-          ),
-          if (!payTime)
-            Positioned(
-              height: media.height,
-              width: media.width,
-              child: widget.loadingWidget ??
-                  const Center(
-                    child: CircularProgressIndicator(),
-                  ),
             )
-        ],
-      )),
+          : null,
+      backgroundColor: payCalled ? Colors.white : Colors.blue,
+      body: SafeArea(
+        child: payCalled && webViewController != null
+            ? WebViewWidget(
+                controller: webViewController!,
+              )
+            : widget.loadingWidget ??
+                const CircularProgressIndicator(
+                  color: Colors.blue,
+                ),
+      ),
     );
   }
 }

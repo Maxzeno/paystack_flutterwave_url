@@ -40,12 +40,13 @@ class _PaymentPageState extends State<PaymentPage> {
         builder: (context) {
           return CheckoutScreen(
             callbackUrl: "https://google.com",
-            secretKey: "sk_test_d71994bd5f5740055d86931cc55e961d02bea411",
+            // secretKey: "sk_test_d71994bd5f5740055d86931cc55e961d02bea411",
+            secretKey: "FLWSECK_TEST-d9cae45c047f9b5a40c5b5c884a2d64c-X",
             amountInMinorUnits: 10000, // 100 naira will be 1000 (kobo)
             fullName: "Emma Nwa",
             email: "emmanuelnwaegunwa@gmail.com",
             gatewayType: GatewayType
-                .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
+                .flutterwave, // toggle between GatewayType.paystack and GatewayType.flutterwave
             onSuccess: () {
               // Is called when payment succeeds
               Navigator.pushReplacementNamed(context, '/success');
@@ -71,10 +72,11 @@ class _PaymentPageState extends State<PaymentPage> {
       MaterialPageRoute(
         builder: (context) {
           return RedirectionToPaymentScreen(
+            callbackUrl: "https://google.com",
             gatewayType: GatewayType
                 .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
             checkoutUrl:
-                "https://checkout.paystack.com/6q3kl2mv3u26mw2", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
+                "https://checkout.paystack.com/sop7flsdp5t2ure", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
             onSuccess: () {
               // Is called when payment succeeds
               Navigator.pushReplacementNamed(context, '/success');

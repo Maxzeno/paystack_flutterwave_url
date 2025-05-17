@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:paystack_flutterwave_url/redirect_to_payment.dart';
 import 'package:paystack_flutterwave_url/utils/constants.dart';
 import 'package:paystack_flutterwave_url/utils/flutterwave.dart';
@@ -42,7 +43,6 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  InAppWebViewController? webViewController;
   bool payTime = false;
   bool hasReachedPayment = false;
   String? checkoutUrl;
@@ -60,9 +60,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   fullName: widget.fullName,
                   amount: widget.amountInMinorUnits,
                   callbackUrl: widget.callbackUrl);
+          log("resDatass $resData");
           setState(() {
             checkoutUrl = resData['data']['authorization_url'];
           });
+          log("checkoutUrlss $checkoutUrl");
         } else {
           final resData = await FlutterwaveService(secretKey: widget.secretKey)
               .initializePayment(
@@ -75,7 +77,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   title: widget.title,
                   description: widget.description);
           setState(() {
-            checkoutUrl = resData['data']['link'];
+            checkoutUrl = resData['data']['authorization_url'];
           });
         }
       } catch (e) {
@@ -105,6 +107,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
           )
         : RedirectionToPaymentScreen(
+            callbackUrl: widget.callbackUrl,
             gatewayType: widget.gatewayType,
             checkoutUrl: checkoutUrl!,
             onSuccess: widget.onSuccess,
