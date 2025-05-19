@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:paystack_flutterwave_url/redirect_to_payment.dart';
 import 'package:paystack_flutterwave_url/utils/constants.dart';
@@ -46,6 +44,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   bool payTime = false;
   bool hasReachedPayment = false;
   String? checkoutUrl;
+
   @override
   void initState() {
     super.initState();
@@ -60,11 +59,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   fullName: widget.fullName,
                   amount: widget.amountInMinorUnits,
                   callbackUrl: widget.callbackUrl);
-          log("resDatass $resData");
           setState(() {
             checkoutUrl = resData['data']['authorization_url'];
           });
-          log("checkoutUrlss $checkoutUrl");
         } else {
           final resData = await FlutterwaveService(secretKey: widget.secretKey)
               .initializePayment(
@@ -77,7 +74,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   title: widget.title,
                   description: widget.description);
           setState(() {
-            checkoutUrl = resData['data']['authorization_url'];
+            checkoutUrl = resData['data']['link'];
           });
         }
       } catch (e) {

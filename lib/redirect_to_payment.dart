@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,22 +36,6 @@ class _RedirectionToPaymentScreenState
     extends State<RedirectionToPaymentScreen> {
   bool payTime = false;
   bool hasReachedPayment = false;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     if (kIsWeb) {
-  //       launchWeb(widget.checkoutUrl, onFailureFunc: onFailureFunc);
-  //     } else {
-  //       if (!isValidUrl(widget.checkoutUrl, widget.gatewayType)) {
-  //         onFailureFunc();
-  //         return;
-  //       }
-  //     }
-  //   });
-  // }
 
   WebViewController? webViewController;
   bool payCalled = false;
@@ -97,19 +82,38 @@ class _RedirectionToPaymentScreenState
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (url) async {
-            if (url.startsWith('https://checkout.paystack.com') ||
-                url.startsWith('https://checkout.paystack.com')) {
+            log('url: $url');
+            if (url.contains('checkout.paystack.com/') ||
+                url.contains('flutterwave.com/v3/hosted/pay') ||
+                url.contains('.flutterwave.com/')) {
             } else if (url.startsWith('about:blank')) {
               // if 2 sends passed and your back we take you out
               if (payCalled) {
                 Navigator.pop(context);
               }
-            } else if (url.startsWith(widget.callbackUrl) &&
-                url.contains("trxref=")) {
-              onSuccessFunc();
               return;
             } else if (url.startsWith("https://standard.paystack.co") &&
                 !url.startsWith("'https://standard.paystack.co/close'")) {
+            } else if (widget.gatewayType == GatewayType.flutterwave &&
+                url.startsWith(widget.callbackUrl) &&
+                url.contains('status=cancelled')) {
+              onFailureFunc();
+              return;
+            } else if (widget.gatewayType == GatewayType.flutterwave &&
+                url.startsWith(widget.callbackUrl) &&
+                url.contains('response=')) {
+              onSuccessFunc();
+              return;
+            } else if (widget.gatewayType == GatewayType.flutterwave &&
+                url.startsWith(widget.callbackUrl) &&
+                url.contains('status=successful')) {
+              onSuccessFunc();
+              return;
+            } else if (widget.gatewayType == GatewayType.paystack &&
+                url.startsWith(widget.callbackUrl) &&
+                url.contains("trxref=")) {
+              onSuccessFunc();
+              return;
             } else {
               onFailureFunc();
             }
@@ -147,11 +151,10 @@ class _RedirectionToPaymentScreenState
               backgroundColor: payCalled ? Colors.white : null,
               leading: IconButton(
                 icon: const Icon(Icons.close),
-                onPressed: () => Navigator.canPop(context),
+                onPressed: () => Navigator.pop(context),
               ),
             )
           : null,
-      backgroundColor: payCalled ? Colors.white : Colors.blue,
       body: SafeArea(
         child: payCalled && webViewController != null
             ? WebViewWidget(

@@ -1,6 +1,20 @@
 # Paystack and Flutterwave URL Payment Integration
 
-A simple Flutter package to facilitate payments via Paystack and Flutterwave checkout URLs. This package enables you to seamlessly redirect users to the respective payment gateway and handle success or failure callbacks.
+# 💳 Paystack & Flutterwave Checkout for Flutter
+
+A Flutter package to facilitate payments via **Paystack** and **Flutterwave** checkout URLs. This package enables you to seamlessly redirect users to the respective payment gateways and handle success or failure callbacks.
+
+---
+
+## ✨ Features
+
+- 🔁 Redirect users to hosted **Paystack** or **Flutterwave** checkout pages.
+- ⚙️ Supports:
+  - Checkout URL generated from your **backend** (recommended).
+  - Checkout URL generated **from the app** (requires secret key).
+- ✅ Handles:
+  - **Success** callback
+  - **Failure** or **Cancel** callback
 
 <p align="center">
 
@@ -66,8 +80,8 @@ class _PaymentPageState extends State<PaymentPage> {
       MaterialPageRoute(
         builder: (context) {
           return CheckoutScreen(
-            callbackUrl: "https://google.com",
-            secretKey: "sk_test_d71994bd5f5740055d86931cc55e961d02bea411",
+            callbackUrl: "https://www.google.com",
+            secretKey: "<secreyt_key>", // Paystack secret key or public key
             amountInMinorUnits: 10000, // 100 naira will be 1000 (kobo)
             fullName: "Emma Nwa",
             email: "emmanuelnwaegunwa@gmail.com",
@@ -98,10 +112,11 @@ class _PaymentPageState extends State<PaymentPage> {
       MaterialPageRoute(
         builder: (context) {
           return RedirectionToPaymentScreen(
+            callbackUrl: "https://www.google.com",
             gatewayType: GatewayType
                 .paystack, // toggle between GatewayType.paystack and GatewayType.flutterwave
             checkoutUrl:
-                "https://checkout.paystack.com/6q3kl2mv3u26mw2", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
+                "https://checkout.paystack.com/sop7flsdp5t2ure", // eg. https://checkout.paystack.com/xlt21ud3wz0985r
             onSuccess: () {
               // Is called when payment succeeds
               Navigator.pushReplacementNamed(context, '/success');
@@ -127,7 +142,7 @@ class _PaymentPageState extends State<PaymentPage> {
       appBar: AppBar(title: const Text("Payment")),
       body: Center(
         child: ElevatedButton(
-          onPressed: payWithKey,
+          onPressed: payWithCheckoutURL,
           child: const Text("Proceed to Payment"),
         ),
       ),
