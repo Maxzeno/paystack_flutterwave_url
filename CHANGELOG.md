@@ -1,3 +1,7 @@
+## 1.4.0
+
+* Updated dependencies
+
 ## 1.3.0
 
 * Improved the checkout experience for better reliability
