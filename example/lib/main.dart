@@ -102,7 +102,7 @@ class _PaymentPageState extends State<PaymentPage> {
       appBar: AppBar(title: const Text("Payment")),
       body: Center(
         child: ElevatedButton(
-          onPressed: payWithCheckoutURL,
+          onPressed: payWithKey,
           child: const Text("Proceed to Payment"),
         ),
       ),
