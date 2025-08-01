@@ -81,6 +81,14 @@ class _RedirectionToPaymentScreenState
       ..setUserAgent('Flutter;Webview')
       ..setNavigationDelegate(
         NavigationDelegate(
+          onNavigationRequest: (request) {
+            if (widget.gatewayType == GatewayType.paystack &&
+                request.url
+                    .startsWith("https://paystack.com/why-choose-paystack")) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
           onPageStarted: (url) async {
             log('url: $url');
             if (url.contains('checkout.paystack.com/') ||

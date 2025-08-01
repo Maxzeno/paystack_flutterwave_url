@@ -1,3 +1,7 @@
+## 1.5.0
+
+* Improved checks
+
 ## 1.4.0
 
 * Updated dependencies
